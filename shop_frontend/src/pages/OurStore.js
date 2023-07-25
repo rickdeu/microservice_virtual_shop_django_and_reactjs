@@ -31,6 +31,8 @@ const OurStore = () => {
                                 </div>
 
                             </div>
+                         
+                         
                             <div className='filter-card mb-3'>
                                 <h3 className='filter-title'>
                                     Filter By

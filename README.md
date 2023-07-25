@@ -1,2 +1,1 @@
-# microservice_virtual_shop_django_and_reactjs
-# microservice_virtual_shop_django_and_reactjs
+# Microservice Architecture with Django and React - Virtual Shop

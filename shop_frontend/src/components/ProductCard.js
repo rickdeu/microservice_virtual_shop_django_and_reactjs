@@ -11,7 +11,7 @@ const ProductCard = (props) => {
 
     return (
         <>
-            <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `}
+            <div className={`${location.pathname === '/store' ? `gr-${grid}` : 'col-3'}`}
             >
                 <Link className='product-card position-relative'>
                     <div className='wishlist-icon position-absolute'>
@@ -34,6 +34,10 @@ const ProductCard = (props) => {
                             edit={false}
                             activeColor="#ffd700"
                         />
+                               <p className={`description ${grid === 12 ? "d-block":"d-none"}`} >
+                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
+                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
+                        </p>
                         <p className='price'> 100.00 Akz</p>
                     </div>
 
@@ -81,6 +85,10 @@ const ProductCard = (props) => {
                             edit={false}
                             activeColor="#ffd700"
                         />
+                               <p className={`description ${grid === 12 ? "d-block":"d-none"}`} >
+                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
+                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
+                        </p>
                         <p className='price'> 100.00 Akz</p>
                     </div>
 

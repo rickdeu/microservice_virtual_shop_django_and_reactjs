@@ -1,0 +1,15 @@
+version: '3'
+services:
+
+  django:
+    container_name: shop_product_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: shop_product_service
+    volumes:
+      - .:/virtual_shop
+    command: 'python manage.py runserver 0.0.0.0:8000'
+    ports:
+      - "8000:8000"
+

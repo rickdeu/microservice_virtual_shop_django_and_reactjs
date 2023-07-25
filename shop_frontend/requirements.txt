@@ -1,0 +1,11 @@
+# Next.js using the `with-redux` template
+npx create-next-app --example with-redux my-app
+
+npm install react-icons --save
+
+npm install react-router-dom localforage match-sorter sort-by
+npm i react-fast-marquee
+
+npm i react-rating-star s-component
+npm i react-helmet
+

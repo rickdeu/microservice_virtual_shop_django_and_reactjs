@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ReactStars from 'react-rating-stars-component';
 import BreadCrumb from '../components/BreadCrumb'
+import Colors from '../components/Colors';
 import Meta from '../components/Meta';
 import ProductCard from '../components/ProductCard';
 
@@ -31,8 +32,8 @@ const OurStore = () => {
                                 </div>
 
                             </div>
-                         
-                         
+
+
                             <div className='filter-card mb-3'>
                                 <h3 className='filter-title'>
                                     Filter By
@@ -80,23 +81,7 @@ const OurStore = () => {
                                     </h5>
                                     <div>
                                         <div>
-                                            <ul className='colors ps-0'>
-
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-
-
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
+                                            <Colors />
                                         </div>
                                     </div>
                                     <h5 className='sub-title'>
@@ -228,7 +213,7 @@ const OurStore = () => {
                             <div className='products-list pb-5'>
 
                                 <div className='d-flex gap-10 flex-wrap'>
-                                <ProductCard grid={grid}/>
+                                    <ProductCard grid={grid} />
 
                                 </div>
 
@@ -236,9 +221,7 @@ const OurStore = () => {
 
                             </div>
 
- <h1>
-continue in 4:47:14 dsd 
-</h1> 
+
                         </div>
                     </div>
                 </div>
@@ -247,6 +230,6 @@ continue in 4:47:14 dsd
 
         </>
     );
-} 
+}
 
 export default OurStore

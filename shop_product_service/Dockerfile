@@ -3,9 +3,9 @@ FROM python:3.9.5
 
 
 ENV PYTHONUNBUFFERED 1
-WORKDIR /virtual_shop
-COPY requirements.txt /virtual_shop/requirements.txt
+WORKDIR /shop_product_service
+COPY shop_product_service/requirements.txt /shop_product_service/requirements.txt
 RUN pip install -r requirements.txt
-COPY . /virtual_shop
+COPY . /shop_product_service
 
 #CMD ["python", "manage.py", "runserver"]

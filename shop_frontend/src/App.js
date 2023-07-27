@@ -13,6 +13,11 @@ import Login from './pages/Login';
 import ForgoutPassword from './pages/ForgoutPassword';
 import Signup from './pages/Signup';
 import ResetPassword from './pages/ResetPassword';
+import SingleBlog from './pages/SingleBlog';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import RefundPolicy from './pages/RefundPolicy';
+import ShippingPolicy from './pages/ShippingPolicy';
+import TermAndConditions from './pages/TermAndConditions';
 function App() {
   return(
   <>
@@ -25,12 +30,20 @@ function App() {
           <Route path='contact' element={<Contact/>}/>
           <Route path='store' element={<OurStore/>}/>
           <Route path='blogs' element={<Blogs/>}/>
+          <Route path='blog/:id' element={<SingleBlog/>}/>
           <Route path='compare-product' element={<CompareProduct/>}/>
           <Route path='wishlist' element={<Wishlist/>}/>
           <Route path='login' element={<Login/>}/>
           <Route path='signup' element={<Signup/>}/>
           <Route path='forgot-password' element={<ForgoutPassword/>}/>
           <Route path='reset-password' element={<ResetPassword/>}/>
+          
+          <Route path='privacy-policy' element={<PrivacyPolicy/>}/>
+          <Route path='refund-policy' element={<RefundPolicy/>}/>
+          <Route path='shipping-policy' element={<ShippingPolicy/>}/>
+          <Route path='termandconditions' element={<TermAndConditions/>}/>
+
+
 
 
 

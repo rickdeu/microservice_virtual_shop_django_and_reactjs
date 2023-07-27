@@ -268,6 +268,23 @@ footer .input-group-text {
   line-height: 22px;
   color: var(--color-777777);
 }
+.single-blog-card a{
+  font-size: 18px;
+  color: var(--color-777777);
+  margin-bottom: 20px;
+}
+
+.single-blog-card h3{
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-1c1c1b);
+}
+.single-blog-card p{
+  color: var(--color-777777);
+  font-size: 14px;
+}
+
+
 
 /* Blog part ends */
 
@@ -597,3 +614,12 @@ footer .input-group-text {
   color: white;
 }
 /* auth card ends here */
+
+/* Policy pages */
+
+.policy{
+  background-color: white;
+  padding: 30px;
+}
+
+/* Policy pages enfs */

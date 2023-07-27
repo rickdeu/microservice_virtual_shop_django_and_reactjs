@@ -268,23 +268,21 @@ footer .input-group-text {
   line-height: 22px;
   color: var(--color-777777);
 }
-.single-blog-card a{
+.single-blog-card a {
   font-size: 18px;
   color: var(--color-777777);
   margin-bottom: 20px;
 }
 
-.single-blog-card h3{
+.single-blog-card h3 {
   font-size: 24px;
   font-weight: 600;
   color: var(--color-1c1c1b);
 }
-.single-blog-card p{
+.single-blog-card p {
   color: var(--color-777777);
   font-size: 14px;
 }
-
-
 
 /* Blog part ends */
 
@@ -539,33 +537,35 @@ footer .input-group-text {
 }
 /* Contact page ends here */
 
-
 /* Compare product page */
 
-.compare-product-card{
+.compare-product-card {
   padding: 20px 15px;
   background-color: white;
   border-radius: 10px;
 }
-.compare-product-card .cross, .whishlist-card  .cross{
+.compare-product-card .cross,
+.whishlist-card .cross {
   top: 15px;
   right: 15px;
   width: 25px;
   padding: 3px;
   cursor: pointer;
 }
-.compare-product-details h5.title, .whishlist-card h5.title{
+.compare-product-details h5.title,
+.whishlist-card h5.title {
   font-size: 15px;
   line-height: 22px;
   font-weight: 500;
   color: var(--color-1c1c1b);
 }
-.compare-product-details h6.price, .whishlist-card h6.price{
+.compare-product-details h6.price,
+.whishlist-card h6.price {
   font-size: 15px;
   line-height: 22px;
   font-weight: 400;
 }
-.compare-product-card .product-detail{
+.compare-product-card .product-detail {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -575,7 +575,7 @@ footer .input-group-text {
 /* Compare product page ends here */
 
 /* auth card */
-.auth-card{
+.auth-card {
   padding: 20px;
   background-color: white;
   width: 500px;
@@ -583,16 +583,16 @@ footer .input-group-text {
   border-radius: 10px;
 }
 
-.auth-card h3{
+.auth-card h3 {
   font-size: 19px;
   font-weight: 500;
   color: var(--color-777777);
 }
-.auth-card p{
+.auth-card p {
   font-size: 13px;
   color: var(--color-777777);
 }
-.auth-card .form-control{
+.auth-card .form-control {
   height: 50px;
   background-color: var(--color-f5f5f7);
   color: var(--color-777777);
@@ -600,16 +600,16 @@ footer .input-group-text {
   border-radius: 10px;
   border-color: transparent;
 }
-.auth-card a{
+.auth-card a {
   font-size: 14px;
   font-weight: 400;
   color: var(--color-1c1c1b);
 }
-.auth-card .signup{
+.auth-card .signup {
   background-color: #febd69;
   color: var(--color-131921);
 }
-.auth-card .signup:hover{
+.auth-card .signup:hover {
   background-color: var(--color-131921);
   color: white;
 }
@@ -617,9 +617,55 @@ footer .input-group-text {
 
 /* Policy pages */
 
-.policy{
+.policy {
   background-color: white;
   padding: 30px;
 }
 
 /* Policy pages enfs */
+
+/* Main product page */
+.description-wrapper h4,
+reviews-wrapper h3 {
+  font-size: 26px;
+  color: var(--color-1c1c1b);
+  margin-bottom: 10px;
+}
+.description-wrapper p {
+  font-size: 14px;
+  color: #777777;
+}
+
+.review-inner-wrapper {
+  background-color: white;
+  padding: 30px;
+}
+.review-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 20px;
+}
+.review-head h4 {
+  font-size: 18px;
+  color: var(--color-1c1c1b);
+}
+.review-head p,
+.review-head a {
+  font-size: 14px;
+  color: var(--color-777777);
+}
+.review-form h4 {
+  font-size: 16px;
+  color: var(--color-777777);
+}
+.review-form {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.review:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.review p {
+  font-size: 14px;
+  color: var(--color-777777);
+}
+/* Main product page ends */

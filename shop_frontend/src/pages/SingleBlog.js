@@ -7,7 +7,7 @@ import { BsSearch, HiOutlineArrowLeft } from 'react-icons/hi'
 const SingleBlog = () => {
     return (
 
-        <>
+        <> 
             <Meta title='Dynamic Blog Name' />
             <BreadCrumb title='Dynamic Blog Name' />
             <div className='blog-wrapper home-wrapper-2 py-2'>

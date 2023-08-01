@@ -6,18 +6,18 @@ import ProductCard from '../components/ProductCard'
 import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Colors'
 import { Link } from 'react-router-dom'
-import { HiOutlineHeart, HiOutlineSwitchVertical, HiOutlineViewList } from 'react-icons/hi'
 import { AiOutlineHeart } from 'react-icons/ai'
 
 import { TbGitCompare } from 'react-icons/tb'
 
+import watch from '../images/watch.jpg'
+
 const SingleProduct = () => {
-    const img = 'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg'
     const props = {
         width: 400,
         height: 600,
         zoomWidth: 500,
-        img: 'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg'
+        img: watch
     };
     const [
         orderedProduct,
@@ -52,10 +52,10 @@ const SingleProduct = () => {
 
                             </div>
                             <div className='other-product-images d-flex flex-wrap gap-15'>
-                                <div> <img className='https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg' alt='watch' /> </div>
-                                <div> <img className='https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg' alt='watch' /> </div>
-                                <div> <img className='https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg' alt='watch' /> </div>
-                                <div> <img className='https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg' alt='watch' /> </div>
+                                <div> <img src={watch} alt='watch' /> </div>
+                                <div> <img src={watch} alt='watch' /> </div>
+                                <div> <img src={watch} alt='watch' /> </div>
+                                <div> <img src={watch} alt='watch' /> </div>
 
 
 
@@ -178,7 +178,7 @@ const SingleProduct = () => {
                                     <div className='d-flex gap-10 align-items-center my-3'>
                                         <h3 className='product-heading'>Product Link</h3>
          
-                                        <a href='javascript:void(0)' onClick={() => { copyToclipboard(img) }}>
+                                        <a href='javascript:void(0)' onClick={() => { copyToclipboard(watch) }}>
                                             Copy Product Link
                                         </a>
                                     </div>

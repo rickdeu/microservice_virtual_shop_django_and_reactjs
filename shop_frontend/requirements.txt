@@ -9,4 +9,4 @@ npm i react-fast-marquee
 npm i react-rating-star s-component
 npm i react-helmet
 
-min: 6:20:50
+min: 8:06:58

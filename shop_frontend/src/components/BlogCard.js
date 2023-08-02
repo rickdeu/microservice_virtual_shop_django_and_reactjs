@@ -12,7 +12,7 @@ const BlogCard = () => {
                     <h5 className='title'>Rejuvenesça com nossos aparelhos</h5>
                     <p className=' desc'>Lorem Ipsum is simply dummy text of 
                     the printing and typesetting industry.</p>
-                    <Link className='buttom' to=''>Ler mais</Link>
+                    <Link className='buttom' to='/blog/:id'>Ler mais</Link>
 
                 </div>
 

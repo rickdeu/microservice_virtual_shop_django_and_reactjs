@@ -9,7 +9,7 @@ services:
     image: shop_product_service
     volumes:
       - .:/shop_product_service
-    #command: 'python shop_product_service/manage.py runserver 0.0.0.0:8000'
+    command: 'python shop_product_service/manage.py runserver 0.0.0.0:8000'
     ports:
       - "8000:8000"
 

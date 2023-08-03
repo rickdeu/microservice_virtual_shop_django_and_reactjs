@@ -20,4 +20,4 @@ COPY . /shop_product_service
 # For a Python application, you would typically use a command like "python manage.py runserver"
 # However, the CMD is commented out here, which means that the container will use the default CMD from the base image.
 # You can uncomment and modify the CMD to match the command needed to run your specific Python application.
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

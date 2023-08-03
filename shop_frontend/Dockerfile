@@ -10,9 +10,9 @@ COPY /shop_frontend/package*.json ./
 RUN npm install --production
 
 # Copy the rest of the application code to the container
-COPY shop_frontend/public/index.html shop_frontend/public/index.html
 
 COPY . /shop_frontend
+COPY shop_frontend/public/index.html /shop_frontend/public/index.html 
 
 # Build the production version of the application
 RUN npm run build

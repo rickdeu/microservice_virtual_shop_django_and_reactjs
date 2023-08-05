@@ -2,3 +2,5 @@ __pycache__
 shop_frontend/node_modulesshop_product_service/shop_product_service/__pycache__/
 *.pyc
 shop_frontend/node_modules
+shop_product_service/products
+shop_product_service/categories

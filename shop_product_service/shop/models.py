@@ -10,10 +10,6 @@ class Category(BaseModel):
         upload_to='categories/%Y/%m/%d',
         blank=True,
         default='shop.jpg'
-        )
-    slug = models.SlugField(
-        max_length=200,
-        unique=True
     )
 
     class Meta:
@@ -37,9 +33,6 @@ class Product(BaseModel):
     name = models.CharField(
         max_length=200
     )
-    slug = models.SlugField(
-        max_length=200
-        )
     image = models.ImageField(
         upload_to='products/%Y/%m/%d',
         blank=True,
@@ -57,11 +50,9 @@ class Product(BaseModel):
         default=True
         )
 
-
     class Meta:
         ordering = ['name']
         indexes = [
-            models.Index(fields=['id', 'slug']),
             models.Index(fields=['name']),
             models.Index(fields=['created_at']),
             models.Index(fields=['category']),

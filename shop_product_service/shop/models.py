@@ -46,10 +46,6 @@ class Product(BaseModel):
         max_digits=10,
         decimal_places=2
         )
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-        )
     is_available = models.BooleanField(
         default=True
         )

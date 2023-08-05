@@ -35,7 +35,7 @@ class CategotyAPITest(APITestCase):
         new_category_image = self._create_test_image()
         response = self.post_category(new_category_name, new_category_image)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Category.objects.count(), 2)
+        self.assertEqual(Category.objects.count(), 1)
         category = Category.objects.get()
         self.assertEqual(category.name, new_category_name)
         # check if url image has expected

@@ -27,7 +27,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r shop_product_service/requirements.txt
-        
+
     - name: Run Tests
       run: |
-        python shop_product_service/manage.py test
+        pytest shop_product_service

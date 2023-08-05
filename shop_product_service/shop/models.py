@@ -10,8 +10,7 @@ class Category(BaseModel):
         upload_to='categories/%Y/%m/%d',
         blank=True,
         default='shop.jpg'
-        )
-
+    )
 
     class Meta:
         ordering = ['name']

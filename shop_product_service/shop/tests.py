@@ -1,7 +1,10 @@
 from django.utils.http import urlencode
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
 from shop.models import Category
 from shop import views
 
@@ -11,9 +14,10 @@ class CategoryTest(APITestCase):
         data = {'name': name, 'image': image}
         response = self.client.post(url, data, format='json')
         return response
+
     def test_post_and_get_category_product(self):
         """
-        Ensure we can create a new Categoru and then get it
+        Ensure we can create a new Category and then get it
         """
         new_category_name = 'Water'
         new_category_image = ''

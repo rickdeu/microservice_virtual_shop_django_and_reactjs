@@ -60,3 +60,21 @@ class Product(BaseModel):
     def __str__(self):
         return self.name
 
+
+
+class ProductImage(BaseModel):
+    """Images Model"""
+
+    active = models.BooleanField(default=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.FileField(upload_to="products/images")
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        """Meta"""
+
+        indexes = [models.Index(fields=["product"])]
+
+    def __str__(self):
+        return str(self.label)
+

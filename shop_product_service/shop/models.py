@@ -65,11 +65,13 @@ class Product(BaseModel):
 class ProductImage(BaseModel):
     """Images Model"""
 
-    active = models.BooleanField(default=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
     image = models.FileField(upload_to="products/images")
     label = models.CharField(max_length=200)
-
+    description = models.TextField(
+        blank=True,
+        null=True
+        )
     class Meta:
         """Meta"""
 

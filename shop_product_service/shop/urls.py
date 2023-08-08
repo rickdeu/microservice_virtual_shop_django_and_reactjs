@@ -9,6 +9,9 @@ urlpatterns = [
     path(f'api/{views.ProductList.name}', views.ProductList.as_view(), name=views.ProductList.name),
     path(f'api/{views.ProductDetail.name}/<int:pk>', views.ProductDetail.as_view(), name=views.ProductDetail.name),
 
+    path(f'api/{views.ProductImageList.name}', views.ProductImageList.as_view(), name=views.ProductImageList.name),
+    path(f'api/{views.ProductImageDetail.name}/<int:pk>', views.ProductImageDetail.as_view(), name=views.ProductImageDetail.name),
+
 
 
 

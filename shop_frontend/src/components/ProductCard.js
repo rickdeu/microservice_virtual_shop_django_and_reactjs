@@ -12,7 +12,7 @@ import view from '../images/view.svg'
 
 
 const ProductCard = (props) => {
-    const { grid } = props;
+    const { grid, product } = props;
 
     let location = useLocation();
 
@@ -70,7 +70,7 @@ const ProductCard = (props) => {
 
             </div>
 
-            <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `}
+            {/* <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `}
             >
                 <Link className='product-card position-relative'>
                     <div className='wishlist-icon position-absolute'>
@@ -119,7 +119,7 @@ const ProductCard = (props) => {
                     </div>
                 </Link>
 
-            </div>
+            </div> */}
         </>
 
     )

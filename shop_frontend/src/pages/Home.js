@@ -1,25 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import Marquee from "react-fast-marquee";
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/BlogCard';
 import ProductCard from '../components/ProductCard';
 import SpecialProducts from '../components/SpecialProducts';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { listProducts } from '../actions/ProductActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import ProductCardList from '../components/ProductCardList';
 
 const Home = () => {
 
-  const [categories, setCategories] = useState([])
+  const dispatch = useDispatch()
+  const productList = useSelector(state => state.productList)
+  const { error, loading, products } = productList
+  // console.log('error: ', error)
+  //console.log('loading: ', loading)
+  console.log('products: ', products)
 
-  useState(() => {
-    axios.get('http://127.0.0.1:8000/category-list/')
-      .then(response => {
-        setCategories(response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching categories')
-      })
 
-  }, []);
+  useEffect(() => {
+    dispatch(listProducts())
+  }, [dispatch])
+
+
+
+
+
   return (
     <>
       <section className='home-wrapper-1 py-5'>
@@ -144,16 +153,16 @@ const Home = () => {
             <div className='col-12'>
               <div className='categories d-flex justify-content-between flex-wrap align-items-center'>
 
-                {categories.map(category => (
-                  <div key={category.id} className='d-flex gap align-items-center'>
+
+                {/*  <div key={category.id} className='d-flex gap align-items-center'>
                     <div>
                       <h6>{category.name}</h6>
-                      <p>10 Items</p>
+
+                      <p>{category.products.length} Items</p>
+
                     </div>
                     <img className='img-fluid' width={110} height={110} src={category.image} alt='camera' />
-                  </div>
-
-                ))}
+                  </div> */}
 
 
               </div>
@@ -171,10 +180,21 @@ const Home = () => {
                 Products em Destaques
               </h3>
             </div>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+
+            {
+              loading ?
+                <Loader /> :
+                error ?
+                  <Message variant='danger'>{error}</Message>
+                  :
+                  products.map((product) => (
+                    <ProductCardList product={product}/>
+                  ))
+
+
+
+            }
+
 
 
           </div>

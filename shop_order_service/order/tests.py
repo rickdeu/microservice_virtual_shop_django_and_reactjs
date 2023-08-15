@@ -52,6 +52,13 @@ class OrderAPITest(APITestCase):
             'price': 2,
             'qty': 8,
             },
+             {
+                'product': 3,
+            'name': 'maca',
+            'image': 'data.image',
+            'price': 2,
+            'qty': 8,
+            },
         ]
         response = self.client.post(
             self.url, orderItems, format='json')

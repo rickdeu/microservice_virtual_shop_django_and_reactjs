@@ -7,3 +7,5 @@ sqlparse
 typing_extensions
 pytest
 pytest-django
+requests
+django-cors-headers

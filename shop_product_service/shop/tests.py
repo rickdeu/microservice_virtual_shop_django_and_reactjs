@@ -236,9 +236,12 @@ class ProductImageAPITest(APITestCase):
             'image': self._create_test_image(), 'description': 'description',
         }
         response2 = self.client.post(self.url_productimage, data2, format='multipart')
+        print(f'response: {response2.data}')
 
 
         self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(ProductImage.objects.count(), 1)
+
         
         product_image = ProductImage.objects.get()
 
@@ -247,7 +250,6 @@ class ProductImageAPITest(APITestCase):
         product.image.delete()
 
 
-        self.assertEqual(product_image.objects.count(), 1)
         self.assertEqual(product_image.label, data2['label'])
         # check if url image has expected
         self.assertTrue(product_image.image.url.startswith('/media/'))

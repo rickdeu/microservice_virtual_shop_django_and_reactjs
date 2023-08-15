@@ -13,6 +13,10 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
+    product = serializers.SlugRelatedField(
+        queryset=Product.objects.all(),
+        slug_field='name',
+    )
     class Meta:
         model = ProductImage
         fields = ('url','pk','product','label', 'image', 'description')

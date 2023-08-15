@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { BsSearch } from 'react-icons/bs'
+import { useDispatch, useSelector } from 'react-redux'
+import { listCategory } from '../actions/CategoryActions'
 
 const Header = () => {
+
+  const dispatch = useDispatch()
+  const categoryList = useSelector(state => state.categoryList)
+  const cart = useSelector(state => state.cart)
+
+  const { categories } = categoryList
+
+  const { cartItems } = cart
+
+  useEffect(() => {
+    dispatch(listCategory())
+  }, [dispatch])
+
+
+
   return (
     <>
       <header className='header-top-strip py-3'>
@@ -71,9 +88,9 @@ const Header = () => {
                   <img src='/images/cart.svg' alt='cart' />
                   <div className='d-flexe flex-column gap-10'>
                     <span className='badge bg-white text-dark'>
-                      0
+                    {cartItems.reduce((acc, item) => acc + item.qty, 0)}
                     </span>
-                    <p className='mb-0'>Kz 50</p>
+                    <p className='mb-0'>{cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}</p>
 
                   </div>
                 </Link>
@@ -101,9 +118,15 @@ const Header = () => {
                       <span className='me-5 d-inline-block'>Categorias</span>
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><Link className="dropdown-item text-white" to="">Electrodomesticos</Link></li>
-                      <li><Link className="dropdown-item text-white" to="">Roupas Sociais</Link></li>
-                      <li><Link className="dropdown-item text-white" to="">Veiculos</Link></li>
+
+                      {
+                        categories.map((category)=>(
+                          <li key={category.id}><Link className="dropdown-item text-white" to="">{category.name}</Link></li>
+                        ))
+                      }
+                     
+                    
+                    
                     </ul>
                   </div>
 

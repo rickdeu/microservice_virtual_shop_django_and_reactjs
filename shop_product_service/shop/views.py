@@ -41,13 +41,13 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProductImageList(generics.ListCreateAPIView):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
-    name = 'product-image-list'
+    name = 'productimage-list'
 
 
 class ProductImageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
-    name = 'product-image-detail'
+    name = 'productimage-detail'
 
 
 class ApiRoot(generics.GenericAPIView):

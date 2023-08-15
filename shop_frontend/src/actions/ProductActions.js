@@ -37,7 +37,7 @@ export const listProducts = () => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_LIST_REQUEST })
 
-        const response  = await axios.get('http://127.0.0.1:8000/api/product-list')
+        const response = await axios.get('http://127.0.0.1:8000/api/product-list')
         //console.log(response.data)
 
         dispatch({
@@ -48,6 +48,29 @@ export const listProducts = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: PRODUCT_LIST_FAIL,
+            payload: error.response && error.response.data.detail
+                ? error.response.data.detail
+                : error.message,
+        })
+    }
+}
+
+export const listProductDetails = (id) => async (dispatch) => {
+    try {
+        dispatch({
+            type: PRODUCT_DETAILS_REQUEST
+        })
+        const response = await axios.get(`http://127.0.0.1:8000/api/product-detail/${id}`)
+        console.log(response)
+
+        dispatch({
+            type: PRODUCT_DETAILS_SUCCESS,
+            payload: response.data
+        })
+
+    } catch (error) {
+        dispatch({
+            type: PRODUCT_DETAILS_FAIL,
             payload: error.response && error.response.data.detail
                 ? error.response.data.detail
                 : error.message,

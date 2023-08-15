@@ -49,6 +49,7 @@ class Product(BaseModel):
     is_available = models.BooleanField(
         default=True
         )
+    
 
     class Meta:
         ordering = ['name']

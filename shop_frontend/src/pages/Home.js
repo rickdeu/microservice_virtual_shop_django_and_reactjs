@@ -9,20 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/ProductActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import ProductCardList from '../components/ProductCardList';
+import { listCategory } from '../actions/CategoryActions';
 
 const Home = () => {
 
   const dispatch = useDispatch()
   const productList = useSelector(state => state.productList)
+  const categoryList = useSelector(state => state.categoryList)
+
   const { error, loading, products } = productList
-  // console.log('error: ', error)
-  //console.log('loading: ', loading)
-  console.log('products: ', products)
+  const { categories } = categoryList
+
+
 
 
   useEffect(() => {
     dispatch(listProducts())
+    dispatch(listCategory())
   }, [dispatch])
 
 
@@ -154,15 +157,21 @@ const Home = () => {
               <div className='categories d-flex justify-content-between flex-wrap align-items-center'>
 
 
-                {/*  <div key={category.id} className='d-flex gap align-items-center'>
+                {categories.map((category) => (
+                  <div key={category.id} className='d-flex gap align-items-center'>
                     <div>
                       <h6>{category.name}</h6>
 
                       <p>{category.products.length} Items</p>
 
                     </div>
-                    <img className='img-fluid' width={110} height={110} src={category.image} alt='camera' />
-                  </div> */}
+                    <img className='img-fluid' width={110} height={110} src={category.image} alt={category.name} />
+                  </div>
+                ))
+
+
+
+                }
 
 
               </div>
@@ -188,7 +197,7 @@ const Home = () => {
                   <Message variant='danger'>{error}</Message>
                   :
                   products.map((product) => (
-                    <ProductCardList product={product}/>
+                    <ProductCard key={product.id} product={product} />
                   ))
 
 
@@ -264,10 +273,12 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
-            <SpecialProducts />
-            <SpecialProducts />
-            <SpecialProducts />
-            <SpecialProducts />
+            {
+              products.map((product) => (
+                <SpecialProducts product={product} />
+              ))
+            }
+
 
           </div>
         </div>
@@ -283,12 +294,19 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
+            {
+              loading ?
+                <Loader /> :
+                error ?
+                  <Message variant='danger'>{error}</Message>
+                  :
+                  products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
 
 
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+
+            }
           </div>
         </div>
 

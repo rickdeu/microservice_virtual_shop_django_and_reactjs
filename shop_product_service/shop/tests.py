@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from shop.models import Category, Product
+from shop.models import Category, Product, ProductImage
 from shop import views
 
 
@@ -147,14 +147,6 @@ class ProductAPITest(APITestCase):
         image_file.seek(0)
         return SimpleUploadedFile('test.png', image_file.read(), content_type='image/png')
 
-    def post_product(self, category, name, image, description, price, is_available):
-        data = {
-            'category': category, 'name': name,
-            'image': image, 'description': description,
-            'price': price, 'is_available': is_available
-        }
-        response = self.client.post(self.url_product, data, format='multipart')
-        return response
 
     def test_post_and_get_product(self):
         """
@@ -169,6 +161,7 @@ class ProductAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Category.objects.count(), 1)
         category = Category.objects.get()
+        
         self.assertEqual(category.name, data['name'])
 
         # check if url image has expected
@@ -188,3 +181,74 @@ class ProductAPITest(APITestCase):
 
         self.assertEqual(Product.objects.count(), 1)
         self.assertEqual(product.name, data['name'])
+
+class ProductImageAPITest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.url_category = reverse(views.CategoryList.name)
+        self.url_product = reverse(views.ProductList.name)
+        self.url_productimage = reverse(views.ProductImageList.name)
+
+
+    def _create_test_image(self):
+        image = Image.new('RGB', (100, 100))
+        image_file = BytesIO()
+        image.save(image_file, 'png')
+        image_file.seek(0)
+        return SimpleUploadedFile('test.png', image_file.read(), content_type='image/png')
+  
+    def test_post_and_get_product_image(self):
+        # test category
+        data = {'name': 'Water', 'image': self._create_test_image()}
+        response = self.client.post(
+            self.url_category, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Category.objects.count(), 1)
+        category = Category.objects.get()
+        
+        self.assertEqual(category.name, data['name'])
+
+        # check if url image has expected
+        self.assertTrue(category.image.url.startswith('/media/'))
+        category.image.delete()
+
+        # test product
+        data1 = {
+            'category': category, 'name': 'name',
+            'image': self._create_test_image(), 'description': 'description',
+            'price': 199, 'is_available': True
+        }
+        response1 = self.client.post(self.url_product, data1, format='multipart')
+
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        product = Product.objects.get()
+
+        self.assertEqual(Product.objects.count(), 1)
+        self.assertEqual(product.name, data1['name'])
+         # check if url image has expected
+        self.assertTrue(product.image.url.startswith('/media/'))
+        #product.image.delete()
+
+
+        # test product image
+        data2 = {
+            'product': product, 'label': 'label',
+            'image': self._create_test_image(), 'description': 'description',
+        }
+        response2 = self.client.post(self.url_productimage, data2, format='multipart')
+
+
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        
+        product_image = ProductImage.objects.get()
+
+        # check if url image has expected
+        self.assertTrue(product.image.url.startswith('/media/'))
+        product.image.delete()
+
+
+        self.assertEqual(product_image.objects.count(), 1)
+        self.assertEqual(product_image.label, data2['label'])
+        # check if url image has expected
+        self.assertTrue(product_image.image.url.startswith('/media/'))
+        product_image.image.delete()

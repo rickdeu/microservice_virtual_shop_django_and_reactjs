@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from order.models import Order, OrderItem
 from order import views
-
+from .repository import get_product, get_user_auth
 from datetime import datetime
 
 
@@ -46,13 +46,13 @@ class OrderAPITest(APITestCase):
 
     def test_get_product(self):
         """Ensure we can retrieve a product"""
-        response = views.get_product(product_id=self.product_id)
+        response = get_product(product_id=self.product_id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['name'], 'Alto Falante')
 
     def test_get_product_no_exists(self):
         """Ensure we can verify if product don't exit with a no exist id"""
-        response = views.get_product(product_id=1)
+        response = get_product(product_id=1)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_post_and_get_order(self):
@@ -68,7 +68,6 @@ class OrderAPITest(APITestCase):
         """Ensure we can get a order with item details"""
 
         response = self.client.post(self.url, self.orderItems, format='json')
-        print(response.data['data']['id'])
 
         url = reverse( 'order_detail',  None,{response.data['data']['id']})
 
@@ -116,3 +115,23 @@ class OrderAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
+    def test_login(self):
+        """Ensure we can login with credentias"""
+        data = {
+            #'username': 'rickdeu',
+            'email': 'andre@gmail.com',
+            'password': 'ndh*8987979878',
+        }
+        response = get_user_auth(data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['email'], data['email'])
+
+    def test_login_with_no_credentials_exist(self):
+        """Ensure we can login with credentias"""
+        data = {
+            #'username': 'rickdeu',
+            'email': 'andre@bgdmailsdfdsfds.com',
+            'password': 'ndh*8987979878',
+        }
+        response = get_user_auth(data=data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

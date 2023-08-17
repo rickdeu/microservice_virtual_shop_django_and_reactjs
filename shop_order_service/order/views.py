@@ -38,7 +38,7 @@ def orderCreate(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def order_detail(request, pk):
     """
-    Retrieve, update or delete a code order.
+    Retrieve, update or delete a  order.
     """
     try:
         order = Order.objects.get(pk=pk)

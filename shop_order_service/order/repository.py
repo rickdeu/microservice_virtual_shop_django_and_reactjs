@@ -33,7 +33,7 @@ def get_user_auth(data=[]):
         if response.status_code == 200:
             token = response.json()['access']
             paylod = jwt.decode(token, key='secret', algorithms=['HS256'], verify=False,  options={'verify_signature': False})
-            print('Token payload: ', paylod)
+            #print('Token payload: ', paylod)
             headers = {"Authorization": f"Bearer {token}"}
             data_url = 'http://127.0.0.1:8002//user/dj-rest-auth/user/'
             response = requests.get(data_url, headers=headers)

@@ -6,33 +6,46 @@ import requests
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, OrderItemSerializer
 
-from .repository import get_product
+from .repository import get_product, get_user_auth
+from .user_auth import UserAuth
 
+from .context_processors import userAuth
 
 @api_view(['POST'])
 def orderCreate(request):
+    user_auth = UserAuth(request)
     data = request.data
+    user  = {
+            'email': 'andre@gmail.com',
+            'password': 'ndh*8987979878',
+        }
 
     if not data:
         return Response({'detail': 'No Order items'}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = OrderItemSerializer(data=data, many=True)
+    user = get_user_auth(data=user)
 
-    if serializer.is_valid():
-        order = Order.objects.create(user=1)
-        for i in serializer.validated_data:
-            product = get_product(i['product_id']).json()
-            OrderItem.objects.create(
-                product_id=product['pk'],
-                product_name=product['name'],
-                order=order,
-                qty=i['qty'],
-                price=product['price'],
-                image=product['image']
-            )
-        serializer = OrderSerializer(order)
-        return Response({'status': 'sucess', 'data': serializer.data})
-    return Response({'status': 'error', 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    if user.status_code == 200:
+        user_auth.addUser(user.json())
+        serializer = OrderItemSerializer(data=data, many=True)
+        if serializer.is_valid():
+            order = Order.objects.create(user=user.json())
+            for i in serializer.validated_data:
+                product = get_product(i['product_id']).json()
+                OrderItem.objects.create(
+                    product_id=product['pk'],
+                    product_name=product['name'],
+                    order=order,
+                    qty=i['qty'],
+                    price=product['price'],
+                    image=product['image']
+                )
+            serializer = OrderSerializer(order)
+            #print('Data get session: ', userAuth(request))
+
+            return Response({'status': 'sucess', 'data': serializer.data})
+        return Response({'status': 'error', 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'status': 'error', 'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

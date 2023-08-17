@@ -4,41 +4,33 @@ from rest_framework.response import Response
 from rest_framework import status
 import requests
 from .models import Order, OrderItem
-from .serializers import OrderSerializer
+from .serializers import OrderSerializer, OrderItemSerializer
 
+from .repository import get_product
 
-def get_product(product_id, domain='127.0.0.1:8000'):
-
-    try:
-        product_url = f'http://{domain}/api/product-detail/{product_id}'
-    except ConnectionError as c:
-        return Response({'detail': f'No connection with {product_url}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        response = requests.get(product_url)
-        if response.status_code == 200:
-            return response  # .json()
-        return Response({'detail': 'No products'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
 def orderCreate(request):
     data = request.data
-    orderItems = data
-    if orderItems and len(orderItems) == 0:
-        return Response({'detail': 'No Order items'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        order = Order.objects.create(user=1)
-        for i in orderItems:
 
-            product = get_product(i['product'])
-            item = OrderItem.objects.create(
-                product_id=product.json()['pk'],
-                product_name=product.json()['name'],
+    if not data:
+        return Response({'detail': 'No Order items'}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = OrderItemSerializer(data=data, many=True)
+
+    if serializer.is_valid():
+        order = Order.objects.create(user=1)
+        for i in serializer.validated_data:
+            product = get_product(i['product_id']).json()
+            OrderItem.objects.create(
+                product_id=product['pk'],
+                product_name=product['name'],
                 order=order,
                 qty=i['qty'],
-                price=product.json()['price'],
-                image=product.json()['image']
+                price=product['price'],
+                image=product['image']
             )
-
-        serializer = OrderSerializer(order, many=False)
-        return Response(serializer.data)
+        serializer = OrderSerializer(order)
+        return Response({'status': 'sucess', 'data': serializer.data})
+    return Response({'status': 'error', 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

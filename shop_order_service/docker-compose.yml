@@ -1,0 +1,15 @@
+version: '3'
+services:
+
+  product_service:
+    container_name: shop_order_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: shop_order_service
+    volumes:
+      - .:/shop_order_service
+    command: 'python manage.py runserver 0.0.0.0:8001'
+    ports:
+      - "8001:8001"
+

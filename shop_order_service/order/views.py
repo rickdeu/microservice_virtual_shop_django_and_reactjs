@@ -9,13 +9,12 @@ from .serializers import OrderSerializer, OrderItemSerializer
 from .repository import get_product
 
 
-
 @api_view(['POST'])
 def orderCreate(request):
     data = request.data
 
     if not data:
-        return Response({'detail': 'No Order items'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'No Order items'}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = OrderItemSerializer(data=data, many=True)
 
@@ -34,3 +33,29 @@ def orderCreate(request):
         serializer = OrderSerializer(order)
         return Response({'status': 'sucess', 'data': serializer.data})
     return Response({'status': 'error', 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def order_detail(request, pk):
+    """
+    Retrieve, update or delete a code order.
+    """
+    try:
+        order = Order.objects.get(pk=pk)
+    except Order.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        if request.method == 'GET':
+            serializer = OrderSerializer(order)
+            return Response(serializer.data)
+
+        elif request.method == 'PUT':
+            serializer = OrderSerializer(order, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.method == 'DELETE':
+            order.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)

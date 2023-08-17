@@ -12,37 +12,15 @@ from rest_framework.response import Response
 from order.models import Order, OrderItem
 from order import views
 
+from datetime import datetime
+
 
 class OrderAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = reverse('order_create')
         self.product_id = 2
-
-    def test_get_product(self):
-        response = views.get_product(product_id=self.product_id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['name'], 'Alto Falante')
-
-    def test_get_product_no_exists(self):
-        response = views.get_product(product_id=1)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    """def test_connection_error(self):
-        self.side_effect = ConnectionError()
-        domain='127.0.0.1:8080'
-        response = views.get_product(self.product_id, domain=domain)
-
-        expected_response = Response(
-            {'detail': f'No connection with http://{domain}/api/product-detail/{self.product_id}'},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        assert response.status_code == expected_response.status_code
-        assert response.json() == expected_response.data"""
-
-    def test_post_and_get_order(self):
-
-        orderItems = [
+        self.orderItems = [
             {
                 'product_id': 2,
                 'product_name': 'goiba',
@@ -65,8 +43,76 @@ class OrderAPITest(APITestCase):
                 'qty': 8,
             },
         ]
+
+    def test_get_product(self):
+        """Ensure we can retrieve a product"""
+        response = views.get_product(product_id=self.product_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['name'], 'Alto Falante')
+
+    def test_get_product_no_exists(self):
+        """Ensure we can verify if product don't exit with a no exist id"""
+        response = views.get_product(product_id=1)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_post_and_get_order(self):
+        """Ensure we can create and retrieve a order"""
+
         response = self.client.post(
-            self.url, orderItems, format='json')
+            self.url, self.orderItems, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Order.objects.count(), 1)
+
+    def test_get_order(self):
+        """Ensure we can get a order with item details"""
+
+        response = self.client.post(self.url, self.orderItems, format='json')
+        print(response.data['data']['id'])
+
+        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+
+        response = self.client.get(url, format='json')
+
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Order.objects.count(), 1)
+
+
+    def test_update_order(self):
+        """Ensure we can update order"""
+
+        response = self.client.post(
+            self.url, self.orderItems, format='json')
+
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Order.objects.count(), 1)
+
+        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+        data = {
+            'user': 2,
+            'paidAt': datetime.now(),
+            'isPaid': True,
+            'isDelivered': True,
+            'deliveredAt':datetime.now(),
+        }
+        response = self.client.put(url, data, format='json')
+
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+
+    def test_delete_order(self):
+        """Ensure we can delete order"""
+
+        response = self.client.post(self.url, self.orderItems, format='json')
+
+        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+
+        response = self.client.delete(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+

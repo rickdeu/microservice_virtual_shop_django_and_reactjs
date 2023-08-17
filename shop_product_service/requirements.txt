@@ -9,3 +9,5 @@ pytest
 pytest-django
 requests
 django-cors-headers
+coreapi
+coreschema

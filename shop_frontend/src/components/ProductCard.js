@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation } from 'react-router-dom';
 
@@ -9,32 +9,49 @@ import wishlist from '../images/wishlist.svg'
 import watch from '../images/watch.jpg'
 import addcart from '../images/add-cart.svg'
 import view from '../images/view.svg'
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../actions/CartActions';
 
 
 const ProductCard = (props) => {
-    const { grid } = props;
+    const { grid, product } = props;
+    const dispatch = useDispatch()
+
+    const [qty, setQty] = useState(1)
 
     let location = useLocation();
+
+    const addToCartHandler = (id, qty) => {
+        dispatch(addToCart(id, qty))
+    }
 
 
     return (
         <>
-            <div className={`${location.pathname === '/store' ? `gr-${grid}` : 'col-3'}`}
-            >
-                <Link  to='/product/:id' className='product-card position-relative'>
+            <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `} >
+                <Link to={`/product/${product.pk}`} className='product-card position-relative'>
                     <div className='wishlist-icon position-absolute'>
                         <Link >
                             <img src={wish} alt='whishlist' />
                         </Link>
                     </div>
                     <div className='product-image'>
-                        <img src={watch} className='img-fluid' alt='product images' />
-                        <img src='images/tab1.jpg' className='img-fluid' alt='product images' />
+                        <img src={product.image} className='img-fluid' width={269} height={269} alt={product.name} />
+                        <img src={product.image} className='img-fluid' width={269} height={269} alt={product.name} />
+
+
+
+
+
+
+
 
                     </div>
                     <div className='product-details'>
-                        <h6 className='brand'>Relogio</h6>
-                        <h5 className='product-title'>Relogios com cobertura de ouro, adequado para crianças e adultos</h5>
+                        <h6 className='brand'>{product.name}</h6>
+                        <h5 className='product-title'>
+                            {product.category}
+                        </h5>
                         <ReactStars
                             count={5}
                             size={24}
@@ -42,11 +59,10 @@ const ProductCard = (props) => {
                             edit={false}
                             activeColor="#ffd700"
                         />
-                               <p className={`description ${grid === 12 ? "d-block":"d-none"}`} >
-                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
-                        Relogios com cobertura de ouro, adequado para crianças e adultos Relogios com cobertura de ouro, adequado para crianças e adultos
+                        <p className={`description ${grid === 12 ? "d-block" : "d-none"}`} >
+                            {product.description}
                         </p>
-                        <p className='price'> 100.00 Akz</p>
+                        <p className='price'> {product.price}</p>
                     </div>
 
                     <div className='action-bar position-absolute'>
@@ -59,7 +75,7 @@ const ProductCard = (props) => {
                                 <img src={view} alt='view' />
                             </Link>
 
-                            <Link>
+                            <Link onClick={() => addToCartHandler(product.pk, qty) }>
                                 <img src={addcart} alt='add-cart' />
                             </Link>
 
@@ -70,7 +86,8 @@ const ProductCard = (props) => {
 
             </div>
 
-            <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `}
+
+            {/* <div className={` ${location.pathname === '/store' ? `gr-${grid}` : 'col-3'} `}
             >
                 <Link className='product-card position-relative'>
                     <div className='wishlist-icon position-absolute'>
@@ -119,7 +136,7 @@ const ProductCard = (props) => {
                     </div>
                 </Link>
 
-            </div>
+            </div> */}
         </>
 
     )

@@ -1,11 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Marquee from "react-fast-marquee";
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/BlogCard';
 import ProductCard from '../components/ProductCard';
 import SpecialProducts from '../components/SpecialProducts';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { listProducts } from '../actions/ProductActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import { listCategory } from '../actions/CategoryActions';
 
 const Home = () => {
+
+  const dispatch = useDispatch()
+  const productList = useSelector(state => state.productList)
+  const categoryList = useSelector(state => state.categoryList)
+
+  const { error, loading, products } = productList
+  const { categories } = categoryList
+
+
+
+
+  useEffect(() => {
+    dispatch(listProducts())
+    dispatch(listCategory())
+  }, [dispatch])
+
+
+
+
+
   return (
     <>
       <section className='home-wrapper-1 py-5'>
@@ -129,70 +155,23 @@ const Home = () => {
           <div className='row'>
             <div className='col-12'>
               <div className='categories d-flex justify-content-between flex-wrap align-items-center'>
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Cameras</h6>
-                    <p>10 Items</p>
-                  </div>
-                  <img src='images/camera.jpg' alt='camera' />
-                </div>
 
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Smart Tv</h6>
-                    <p>10 Items</p>
-                  </div>
-                  <img src='images/tv.jpg' alt='tv' />
-                </div>
 
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Smart Watches</h6>
-                    <p>10 Items</p>
-                  </div>
-                  <img src='images/camera.jpg' alt='watch' />
-                </div>
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Music & Gaming</h6>
-                    <p>10 Items</p>
-                  </div>
-                  <img src='images/headphone.jpg' alt='headphone' />
-                </div>
+                {categories.map((category) => (
+                  <div key={category.id} className='d-flex gap align-items-center'>
+                    <div>
+                      <h6>{category.name}</h6>
 
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Torradeira</h6>
-                    <p>100 Items</p>
-                  </div>
-                  <img src='images/homeapp.jpg' alt='camera' />
-                </div>
+                      <p>{category.products.length} Items</p>
 
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Alto Falante</h6>
-                    <p>50 Items</p>
+                    </div>
+                    <img className='img-fluid' width={110} height={110} src={category.image} alt={category.name} />
                   </div>
-                  <img src='images/speaker.jpg' alt='tv' />
-                </div>
-
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Phones Bluthooth</h6>
-                    <p>45 Items</p>
-                  </div>
-                  <img src='images/acc.jpg' alt='watch' />
-                </div>
-                <div className='d-flex gap align-items-center'>
-                  <div>
-                    <h6>Laptops</h6>
-                    <p>150 Items</p>
-                  </div>
-                  <img src='images/laptop.jpg' alt='headphone' />
-                </div>
+                ))
 
 
 
+                }
 
 
               </div>
@@ -210,10 +189,21 @@ const Home = () => {
                 Products em Destaques
               </h3>
             </div>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+
+            {
+              loading ?
+                <Loader /> :
+                error ?
+                  <Message variant='danger'>{error}</Message>
+                  :
+                  products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
+
+
+
+            }
+
 
 
           </div>
@@ -224,9 +214,9 @@ const Home = () => {
       <section className='famous-wrapper py-5 home-wraper-2'>
         <div className='container-xxl'>
           <div className='row'>
-          <div className='col-3'>
+            <div className='col-3'>
               <div className='famous-card position-relative'>
-                <img src='images/catbanner-01.jpg' className='img-fluid'  alt='famous' />
+                <img src='images/catbanner-01.jpg' className='img-fluid' alt='famous' />
                 <div className='famous-content position-absolute'>
                   <h5 className='text-dark'>MackBook</h5>
                   <h6 className='text-dark'>Super Potente</h6>
@@ -238,7 +228,7 @@ const Home = () => {
 
             <div className='col-3'>
               <div className='famous-card position-relative'>
-                <img src='images/catbanner-02.jpg' className='img-fluid'  alt='famous' />
+                <img src='images/catbanner-02.jpg' className='img-fluid' alt='famous' />
                 <div className='famous-content position-absolute'>
                   <h5 className='text-dark'>Watch</h5>
                   <h6 className='text-dark'>Versão 2022</h6>
@@ -247,10 +237,10 @@ const Home = () => {
                 </div>
               </div>
             </div>
-       
+
             <div className='col-3'>
               <div className='famous-card position-relative'>
-                <img src='images/catbanner-03.jpg' className='img-fluid'  alt='famous' />
+                <img src='images/catbanner-03.jpg' className='img-fluid' alt='famous' />
                 <div className='famous-content position-absolute'>
                   <h5 className='text-dark'>iPad</h5>
                   <h6 className='text-dark'>Verão melhorada</h6>
@@ -259,10 +249,10 @@ const Home = () => {
                 </div>
               </div>
             </div>
-       
+
             <div className='col-3'>
               <div className='famous-card position-relative'>
-                <img src='images/catbanner-04.jpg' className='img-fluid'  alt='famous' />
+                <img src='images/catbanner-04.jpg' className='img-fluid' alt='famous' />
                 <div className='famous-content position-absolute'>
                   <h5 className='text-dark'>Auriculas</h5>
                   <h6 className='text-dark'>Suporte Bluethoot</h6>
@@ -283,10 +273,12 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
-            <SpecialProducts />
-            <SpecialProducts />
-            <SpecialProducts />
-            <SpecialProducts />
+            {
+              products.map((product) => (
+                <SpecialProducts product={product} />
+              ))
+            }
+
 
           </div>
         </div>
@@ -302,12 +294,19 @@ const Home = () => {
             </div>
           </div>
           <div className='row'>
+            {
+              loading ?
+                <Loader /> :
+                error ?
+                  <Message variant='danger'>{error}</Message>
+                  :
+                  products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
 
 
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+
+            }
           </div>
         </div>
 
@@ -359,23 +358,23 @@ const Home = () => {
                 Noticias no nosso blog
               </h3>
             </div>
-        
+
 
 
 
           </div>
           <div className='row'>
             <div className='col-3'>
-            <BlogCard />
+              <BlogCard />
             </div>
             <div className='col-3'>
-            <BlogCard />
+              <BlogCard />
             </div>
             <div className='col-3'>
-            <BlogCard />
+              <BlogCard />
             </div>
             <div className='col-3'>
-            <BlogCard />
+              <BlogCard />
             </div>
           </div>
         </div>

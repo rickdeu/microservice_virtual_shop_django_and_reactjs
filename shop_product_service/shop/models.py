@@ -49,6 +49,7 @@ class Product(BaseModel):
     is_available = models.BooleanField(
         default=True
         )
+    
 
     class Meta:
         ordering = ['name']
@@ -59,4 +60,24 @@ class Product(BaseModel):
         ]
     def __str__(self):
         return self.name
+
+
+
+class ProductImage(BaseModel):
+    """Images Model"""
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
+    image = models.FileField(upload_to="products/images")
+    label = models.CharField(max_length=200)
+    description = models.TextField(
+        blank=True,
+        null=True
+        )
+    class Meta:
+        """Meta"""
+
+        indexes = [models.Index(fields=["product"])]
+
+    def __str__(self):
+        return str(self.label)
 

@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactStars from 'react-rating-stars-component';
+import { useDispatch, useSelector } from 'react-redux';
+import { listCategory } from '../actions/CategoryActions';
+import { listProducts } from '../actions/ProductActions';
 import BreadCrumb from '../components/BreadCrumb'
 import Colors from '../components/Colors';
 import Meta from '../components/Meta';
@@ -7,6 +10,25 @@ import ProductCard from '../components/ProductCard';
 
 const OurStore = () => {
     const [grid, setGrid] = useState(4);
+
+    const dispatch = useDispatch()
+    const productList = useSelector(state => state.productList)
+    const categoryList = useSelector(state => state.categoryList)
+  
+    const { error, loading, products } = productList
+    const { categories } = categoryList
+  
+  
+  
+  
+    useEffect(() => {
+      dispatch(listProducts())
+      dispatch(listCategory())
+    }, [dispatch])
+  
+  
+  
+
     return (
         <>
 
@@ -24,10 +46,13 @@ const OurStore = () => {
                                 </h3>
                                 <div>
                                     <ul className='ps-0'>
-                                        <li>Watch</li>
-                                        <li>TV</li>
-                                        <li>Camera</li>
-                                        <li>Laptop</li>
+                                        {
+                                            categories.map((category)=>(
+                                                <li key={category.id}>{category.name}</li>
+                                            ))
+
+                                        }
+                                       
                                     </ul>
                                 </div>
 
@@ -128,30 +153,15 @@ const OurStore = () => {
                                     Random Products
                                 </h3>
                                 <div>
-                                    <div className='random-products mb-3 d-flex'>
+                               
+                                   {
+                                    products.map((product)=>(
+                                        <div key={product.id} className='random-products d-flex'>
                                         <div className='w-50'>
-                                            <img src='images/watch.jpg' className='img-fluid' alt='watch' />
+                                            <img src={product.image} className='img-fluid' width={110} height={110} alt={product.name} />
                                         </div>
                                         <div className='w-50'>
-                                            <h5>KIds Headphones bulk 10 pack multi colored for students</h5>
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={false}
-                                                activeColor="#ffd700"
-                                            />
-                                            <p className='price'> 100.00 Akz</p>
-
-                                        </div>
-
-                                    </div>
-                                    <div className='random-products d-flex'>
-                                        <div className='w-50'>
-                                            <img src='images/headphone.jpg' className='img-fluid' alt='watch' />
-                                        </div>
-                                        <div className='w-50'>
-                                            <h5>Headphones bulk 10 pack multi colored for students</h5>
+                                            <h5>{product.name}</h5>
                                             <ReactStars
                                                 count={5}
                                                 size={24}
@@ -159,11 +169,13 @@ const OurStore = () => {
                                                 edit={false}
                                                 activeColor="#ffd700"
                                             />
-                                            <p className='price'> 500.00 Akz</p>
+                                            <p className='price'>{ product.price}</p>
 
                                         </div>
 
                                     </div>
+                                    ))
+                                   }
 
 
                                 </div>
@@ -213,8 +225,12 @@ const OurStore = () => {
                             <div className='products-list pb-5'>
 
                                 <div className='d-flex gap-10 flex-wrap'>
-                                    <ProductCard grid={grid} />
-
+                                    {
+                                        products.map((product)=>(
+                                            <ProductCard grid={grid} product={product}/>
+                                        ))
+                                    }
+ 
                                 </div>
 
 

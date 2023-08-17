@@ -2,17 +2,19 @@ import React from 'react'
 import ReactStars from 'react-rating-stars-component'
 import { Link } from 'react-router-dom'
 
-const SpecialProducts = () => {
+const SpecialProducts = (props) => {
+    const { product } = props;
+
     return (
         <div className='col-6 mb-3'>
             <div className='special-product-card'>
                 <div className='d-flex justify-content-between'>
                     <div>
-                        <img className='img-fluid' src='images/watch.jpg' alt='watch' />
+                        <img className='img-fluid' src={product.image} width={269} height={269} alt='watch' />
                     </div>
                     <div className='special-product-content'>
-                        <h5 className='brand'>Watches</h5>
-                        <h6 className='title'> Exclusivo para Sansung Galaxy Not10+ Mobile Phone Sim...</h6>
+                        <h5 className='brand'>{product.name}</h5>
+                        <h6 className='title'> {product.category}</h6>
                         <ReactStars
                             count={5}
                             size={24}
@@ -21,9 +23,9 @@ const SpecialProducts = () => {
                             activeColor="#ffd700"
                         />
                         <p className='price'>
-                            <span className='red-p'>Akz 1000</span>
+                            <span className='red-p'>{product.price}</span>
                             &nbsp;
-                            <strike>Akz 2000</strike>
+                            <strike>{product.price}</strike>
                         </p>
                         <div className='discount-till d-flex align-items-center gap-10'>
                             <p className='mb-0'><b>5  </b>Dias</p>

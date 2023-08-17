@@ -1,0 +1,14 @@
+asgiref
+Django
+djangorestframework
+Pillow
+pytz
+sqlparse
+typing_extensions
+pytest
+pytest-django
+requests
+django-cors-headers
+coreapi
+coreschema
+dj-rest-auth

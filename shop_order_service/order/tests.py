@@ -20,7 +20,8 @@ class OrderAPITest(APITestCase):
         self.client = APIClient()
         self.url = reverse(views.OrderCreate.name)
         self.product_id = 2
-        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyMzc4NzQxLCJpYXQiOjE2OTIzNzg0NDEsImp0aSI6Ijk2ZDI2YWNkNGVlOTQ4ZmRhNzQ4ZTZhYjNhOTZmZTViIiwidXNlcl9pZCI6Mn0.2TI3Nc776DBbtak_RZkGPOHyQzDGjPruSmZ__KrMLoY"  
+        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyMzgyNTUzLCJpYXQiOjE2OTIzODIyNTMsImp0aSI6IjRjM2I4MmE0N2M1NTQ2YjFiNmVhOGNkMzUwNWZlOGJmIiwidXNlcl9pZCI6Mn0.2Ea21URgjpdmaFsAprv3a1jpUDina9cRmZTDlfvg_hQ"
+       
         self.orderItems = {
             'token': self.token,
             "orderItems": [
@@ -74,7 +75,8 @@ class OrderAPITest(APITestCase):
 
         response = self.client.post(self.url, self.orderItems, format='json')
 
-        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
+        url = reverse(views.OrderDetail.name,  None, {
+                      response.data['id'], self.token})
 
         response = self.client.get(url, format='json')
 
@@ -114,7 +116,8 @@ class OrderAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
-        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
+        url = reverse(views.OrderDetail.name,  None, {
+                      response.data['id'], self.token})
         data = {
             'user': 2,
             'paidAt': datetime.now(),
@@ -126,14 +129,13 @@ class OrderAPITest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
-
     def test_delete_order(self):
         """Ensure we can delete order"""
 
         response = self.client.post(self.url, self.orderItems, format='json')
 
-        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
+        url = reverse(views.OrderDetail.name,  None, {
+                      response.data['id'], self.token})
 
         response = self.client.delete(url, format='json')
 

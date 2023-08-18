@@ -44,29 +44,33 @@ class OrderDetail(APIView):
     """
     Retrieve, update or delete a  order.
     """
+    
 
-    def get_object(self, pk):
+    def get_object(self, pk, token):
         try:
+            user = get_user_auth(token=token)
+            if user.status_code == 401:
+                return Response({'error': 'Unable to log in with provided credentials'}, status=status.HTTP_401_UNAUTHORIZED)
             return Order.objects.get(pk=pk)
         except Order.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        order = self.get_object(pk)
+    def get(self, request, pk, token, format=None):
+        order = self.get_object(pk=pk, token=token)
         serializer = OrderSerializer(order)
 
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        order = self.get_object(pk)
+    def put(self, request, pk, token, format=None):
+        order = self.get_object(pk=pk, token=token)
         serializer = OrderSerializer(order, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk, format=None):
-        order = self.get_object(pk)
+    def delete(self, request, pk, token, format=None):
+        order = self.get_object(pk=pk, token=token)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

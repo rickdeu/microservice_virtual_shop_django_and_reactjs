@@ -1,4 +1,4 @@
-name: ORDER CI/CD
+name: PAYMENT CI/CD
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r shop_order_service/requirements.txt
+        pip install -r shop_payment_service/requirements.txt
 
     - name: Run Tests
       run: |
-        pytest shop_order_service
+        pytest shop_payment_service

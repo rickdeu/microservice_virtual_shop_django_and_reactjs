@@ -18,31 +18,36 @@ from datetime import datetime
 class OrderAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse('order_create')
+        self.url = reverse(views.OrderCreate.name)
         self.product_id = 2
-        self.orderItems = [
-            {
-                'product_id': 2,
-                'product_name': 'goiba',
-                'image': 'data.image',
-                'price': 2,
-                'qty': 100,
-            },
-            {
-                'product_id': 2,
-                'product_name': 'pera',
-                'image': 'data.image',
-                'price': 2,
-                'qty': 38,
-            },
-            {
-                'product_id': 3,
-                'product_name': 'maca',
-                'image': 'data.image',
-                'price': 2,
-                'qty': 8,
-            },
-        ]
+        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyMzc4NzQxLCJpYXQiOjE2OTIzNzg0NDEsImp0aSI6Ijk2ZDI2YWNkNGVlOTQ4ZmRhNzQ4ZTZhYjNhOTZmZTViIiwidXNlcl9pZCI6Mn0.2TI3Nc776DBbtak_RZkGPOHyQzDGjPruSmZ__KrMLoY"  
+        self.orderItems = {
+            'token': self.token,
+            "orderItems": [
+                {
+                    'product_id': 2,
+                    'product_name': 'goiba',
+                    'image': 'data.image',
+                    'price': 2,
+                    'qty': 100,
+                },
+                {
+                    'product_id': 2,
+                    'product_name': 'pera',
+                    'image': 'data.image',
+                    'price': 2,
+                    'qty': 38,
+                },
+                {
+                    'product_id': 3,
+                    'product_name': 'maca',
+                    'image': 'data.image',
+                    'price': 2,
+                    'qty': 8,
+                }
+
+            ]
+        }
 
     def test_get_product(self):
         """Ensure we can retrieve a product"""
@@ -60,9 +65,8 @@ class OrderAPITest(APITestCase):
 
         response = self.client.post(
             self.url, self.orderItems, format='json')
-        
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
     def test_get_order(self):
@@ -70,14 +74,36 @@ class OrderAPITest(APITestCase):
 
         response = self.client.post(self.url, self.orderItems, format='json')
 
-        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
 
         response = self.client.get(url, format='json')
-
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Order.objects.count(), 1)
 
+    def test_user_get_orders(self):
+        """Ensure we can get a order with item details"""
+
+        response = self.client.post(self.url, self.orderItems, format='json')
+
+        url = reverse(views.UserOrders.name,  None,  {self.token})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Order.objects.count(), 1)
+
+    def test_user_get_orders_with_invalid_token(self):
+        """Ensure we can get a order with item details"""
+
+        response = self.client.post(self.url, self.orderItems, format='json')
+
+        url = reverse(views.UserOrders.name,  None,
+                      {'odsihfuieugryifuvshdfgyu'})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_order(self):
         """Ensure we can update order"""
@@ -85,20 +111,18 @@ class OrderAPITest(APITestCase):
         response = self.client.post(
             self.url, self.orderItems, format='json')
 
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
-        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
         data = {
             'user': 2,
             'paidAt': datetime.now(),
             'isPaid': True,
             'isDelivered': True,
-            'deliveredAt':datetime.now(),
+            'deliveredAt': datetime.now(),
         }
         response = self.client.put(url, data, format='json')
-
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -109,30 +133,21 @@ class OrderAPITest(APITestCase):
 
         response = self.client.post(self.url, self.orderItems, format='json')
 
-        url = reverse( 'order_detail',  None,{response.data['data']['id']})
+        url = reverse(views.OrderDetail.name,  None, {response.data['id']})
 
         response = self.client.delete(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-
     def test_login(self):
         """Ensure we can login with credentias"""
-        data = {
-            #'username': 'rickdeu',
-            'email': 'andre@gmail.com',
-            'password': 'ndh*8987979878',
-        }
-        response = get_user_auth(data=data)
+
+        response = get_user_auth(token=self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['email'], data['email'])
+        self.assertEqual(response.json()['email'], 'hangaloandre1@gmail.com')
 
     def test_login_with_no_credentials_exist(self):
         """Ensure we can login with credentias"""
-        data = {
-            #'username': 'rickdeu',
-            'email': 'andre@bgdmailsdfdsfds.com',
-            'password': 'ndh*8987979878',
-        }
-        response = get_user_auth(data=data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        response = get_user_auth(token='odaofshfiugr87euyr')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

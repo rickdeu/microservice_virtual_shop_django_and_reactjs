@@ -10,7 +10,7 @@ class Payment(BaseModel):
     payment_method = models.CharField(max_length=100, verbose_name='Payment Method')
     payment_status = models.BooleanField(default=False, verbose_name='Is Paid ?')
     amount = models.DecimalField(decimal_places=2, max_digits=100, verbose_name='Amount')
-    currency = models.CharField(max_length=200)
+    currency = models.CharField(max_length=200, default='USD')
 
     """card information"""
     card_number = models.CharField(max_length=150)

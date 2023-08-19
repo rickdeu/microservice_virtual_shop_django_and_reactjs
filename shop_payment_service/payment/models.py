@@ -1,36 +1,27 @@
 from django.db import models
 from .base import BaseModel
 
-class PaymentMethod(BaseModel):
-    """PaymentMethod Model"""
-
-    name = models.CharField(max_length=200)
-    description = models.TextField(null=True, blank=True)
-
-    class Meta:
-        """Meta"""
-
-        ordering = ["name"]
-        indexes = [models.Index(fields=["name"])]
-
-    def __str__(self):
-        """Model Name"""
-        return str(self.name)
-
 
 class Payment(BaseModel):
-    """ "PaymentMethod Model"""
+    """ "PaymentMethod"""
 
     order = models.CharField(max_length=100, verbose_name='Order')
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
-    payment_status = models.BooleanField(default=False)
+    user = models.CharField(max_length=100, verbose_name='User')
+    payment_method = models.CharField(max_length=100, verbose_name='Payment Method')
+    payment_status = models.BooleanField(default=False, verbose_name='Is Paid ?')
+    amount = models.DecimalField(decimal_places=2, max_digits=100, verbose_name='Amount')
     currency = models.CharField(max_length=200)
 
-    class Meta:
+    """card information"""
+    card_number = models.CharField(max_length=150)
+    expiry_month = models.CharField(max_length=150)
+    expiry_year = models.CharField(max_length=150)
+    cvc = models.CharField(max_length=150)
 
+    class Meta:
         ordering = ["created_at"]
+        unique_together = (('order', 'payment_status'),)
         indexes = [models.Index(fields=["payment_method"])]
 
     def __str__(self):
-        """Model Name"""
-        return str(self.pk)
+        return self.amount

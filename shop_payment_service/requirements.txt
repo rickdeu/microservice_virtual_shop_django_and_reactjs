@@ -21,3 +21,6 @@ https://django-payments.readthedocs.io/en/latest/backends.html
 https://episyche.com/blog/how-to-integrate-razorpay-payment-gateway-in-django-and-react-for-the-checkout-use-case
  # important
 https://medium.com/@hari154542/how-to-integrate-stripe-payment-gateway-in-django-rest-framework-232ee341601
+
+#paypal
+https://developer.paypal.com/api/rest/reference/orders/v2/errors/#create-order

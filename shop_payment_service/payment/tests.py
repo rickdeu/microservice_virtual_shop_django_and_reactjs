@@ -3,97 +3,114 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from payment.models import Payment
 from payment import views
+import json
 
 
-class CategotyAPITest(APITestCase):
+class PaymentPayPalServiceAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse(views.PaymentList.name)
-        self.payment_data = {
-            "order": "1",
-            "payment_method": "ATM",
-            "payment_status": False,
-            "amount": "299.00",
-            "currency": "AKz"
+        self.url = reverse(views.PayPalPaymentServiceAPI.name)
+        self.data = {
+            "intent": "CAPTURE",
+            "application_context": {
+                "notify_url": "https://virtualshop.co.ao",
+                "return_url": "https://virtualshop.co.ao/return",
+                "cancel_url": "https://virtualshop.co.ao/cancel",
+                "brand_name": "VIRTUAL SHOP",
+                "landing_page": "BILLING",
+                "shipping_preference": "NO_SHIPPING",
+                "user_action": "CONTINUE"
+            },
+            "purchase_units": [
+                {
+                    "reference_id": "294375635",
+                    "description": "TEST PAYMENT VIRTUAL SHOP",
+
+                    "custom_id": "ANGOLA1",
+                    "soft_descriptor": "VIRTUAL SHOP",
+                    "amount": {
+                        "currency_code": "USD",
+                        "value": "200",
+                        "breakdown": {
+                            "item_total": {
+                                    "currency_code": "USD",
+                                    "value": "180.00"
+                            },
+                            "shipping": {
+                                "currency_code": "USD",
+                                "value": "20.00"
+                            },
+
+
+                        }
+
+                    },
+                }
+            ],
+            "items": [
+                {
+                    "name": "T-Shirt",
+                    "description": "Green XL",
+                    "sku": "sku01",
+                    "unit_amount": {
+                        "currency_code": "USD",
+                        "value": "90.00"
+                    },
+                    "tax": {
+                        "currency_code": "USD",
+                        "value": "10.00"
+                    },
+                    "quantity": "1",
+                    "category": "PHYSICAL_GOODS",
+                },
+                {
+                    "name": "Shoes",
+                    "description": "Running, Size 10.5",
+                    "sku": "sku02",
+                    "unit_amount": {
+                        "currency_code": "USD",
+                        "value": "45.00"
+                    },
+                    "tax": {
+                        "currency_code": "USD",
+                        "value": "5.00"
+                    },
+                    "quantity": "2",
+                                "category": "PHYSICAL_GOODS"
+                }
+            ],
+            "shipping": {
+                "method": "United States Postal Service",
+                "name": {
+                    "full_name": "Andre Hangalo"
+                },
+                "address": {
+                    "address_line_1": "123 Townsend St",
+                    "address_line_2": "Floor 6",
+                    "admin_area_2": "San Francisco",
+                    "admin_area_1": "CA",
+                    "postal_code": "94107",
+                    "country_code": "US"
+                }
+            }
+
         }
 
     def test_post_and_get_payment(self):
         """test payment"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
+        response = self.client.post(self.url, data=self.data, format='json')
+        #print('Response payment: ', response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_post_with_the_same_order_and_payment_status_payment(self):
-        """test post with same orderId and payment_status"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
+    def test_get_payment(self):
+        """test payment"""
+        response = self.client.post(self.url, data=self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.post(self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        pk = response.json()['id']
 
-    def test_get_payment_detail(self):
-        """test get payment"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
-
-        url = reverse(views.PaymentDetail.name, None,
-                      {Payment.objects.get().pk})
+        url = reverse('payment-detail', None, {pk})
+        # get payment after create
         response = self.client.get(url, format='json')
+        print('Request payment: ', response.json())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['order'], Payment.objects.get().order)
-
-    def test_update_payment(self):
-        """test update payment"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
-
-        """New data to update"""
-        payment_data = {
-            "order": "1",
-            "payment_method": "ATM",
-            "payment_status": True,
-            "amount": "299.00",
-            "currency": "AKz"
-        }
-        url = reverse(views.PaymentDetail.name, None,
-                      {Payment.objects.get().pk})
-        response = self.client.put(url, payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['payment_status'], True)
-
-    def test_update_single_field_payment(self):
-        """test update payment"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
-
-        """New data to update"""
-        payment_data = {
-
-            "payment_status": True,
-        }
-        url = reverse(views.PaymentDetail.name, None,
-                      {Payment.objects.get().pk})
-        response = self.client.patch(url, payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['payment_status'], True)
-
-    def test_delete_payment(self):
-        """test delete payment"""
-        response = self.client.post(
-            self.url, self.payment_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Payment.objects.count(), 1)
-
-        url = reverse(views.PaymentDetail.name, None,
-                      {Payment.objects.get().pk})
-        response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

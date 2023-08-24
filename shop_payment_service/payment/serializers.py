@@ -47,5 +47,5 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('url', 'pk', 'order', 'payment_method',  'payment_status',
-                  'amount', 'currency', 'expiry_month', 'expiry_year', 'cvc')
+        fields = ('order','user', 'payment_method',  'payment_status',
+                  'amount', 'currency', 'card_number', 'expiry_month', 'expiry_year', 'cvc')

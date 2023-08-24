@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # instaled apps
     'rest_framework',
     'corsheaders',
+      "payments", # payment method
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+SECRET_KEY_STRIPE = 'sk_test_51NgtPHA8Oef8p9EQdBLgD3KuBXSeny5Uvyd72QV7bMl2Zyz8gYgpdXCTjtaAsNaMUD74QP4ySvG5H9LVLCFbW7a700vi5kXHUk'
+PUBLIC_KEY_STRIPE ='pk_test_51NgtPHA8Oef8p9EQq7ti4KIINsVampsa4ITdImboL7KAo3r3t07udEtklO3g93JnJaie7VmPtvygMqSDfDfMMOBV00ZXpfPMl8'
+
+
+# PAYMENT METHODS
+PAYMENT_HOST = '0.0.0.0:8003'
+PAYMENT_USES_SSL = False
+# optional
+#PAYMENT_VARIANT_FACTORY = "mypaymentapp.provider_factory"
+
+# PAYPAL
+CLIENT_ID = 'AXvcINdvWQUhrlDcIV7XAu44KHrsI5P-rGqGBPqowUCWUxtxLeucbf1jL4nQquTKlz8_-ddZhdVtAZD5'
+SECRET_KEY_PAYPAL = 'EOC9gj3x-67wT6_v13WpE6dIfN1670gs5N31NImL9jqSzgSmWH9DGcn6LX1kZJNAAV3EHLj6hFw0eGsK'

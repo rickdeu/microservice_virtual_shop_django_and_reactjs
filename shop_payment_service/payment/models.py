@@ -7,7 +7,7 @@ class Payment(BaseModel):
 
     order = models.CharField(max_length=100, verbose_name='Order')
     user = models.CharField(max_length=100, verbose_name='User')
-    payment_method = models.CharField(max_length=100, verbose_name='Payment Method')
+    payment_method = models.CharField(max_length=100, default='STRIP', verbose_name='Payment Method')
     payment_status = models.BooleanField(default=False, verbose_name='Is Paid ?')
     amount = models.DecimalField(decimal_places=2, max_digits=100, verbose_name='Amount')
     currency = models.CharField(max_length=200, default='USD')

@@ -49,6 +49,7 @@ class CategotyAPITest(APITestCase):
         }
 
         response = self.client.post(self.url_login, credentials, format='json')
+        print('Response user login: ', response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_post_logout(self):

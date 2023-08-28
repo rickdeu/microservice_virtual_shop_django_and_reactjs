@@ -11,17 +11,16 @@ from rest_framework.response import Response
 
 from order.models import Order, OrderItem
 from order import views
-from .repository import get_product, get_user_auth
+from .repository import get_product, get_user_auth, login_user
 from datetime import datetime
-
 
 class OrderAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = reverse(views.OrderCreate.name)
         self.product_id = 2
-        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkyMzgyNTUzLCJpYXQiOjE2OTIzODIyNTMsImp0aSI6IjRjM2I4MmE0N2M1NTQ2YjFiNmVhOGNkMzUwNWZlOGJmIiwidXNlcl9pZCI6Mn0.2Ea21URgjpdmaFsAprv3a1jpUDina9cRmZTDlfvg_hQ"
-       
+        self.token =  login_user(email='user@gmail.com', password='ndh*8987979878').json()['access']
+
         self.orderItems = {
             'token': self.token,
             "orderItems": [
@@ -75,8 +74,11 @@ class OrderAPITest(APITestCase):
 
         response = self.client.post(self.url, self.orderItems, format='json')
 
-        url = reverse(views.OrderDetail.name,  None, {
-                      response.data['id'], self.token})
+        print('My token: ', self.token)
+
+        url = reverse(views.OrderDetail.name,  None, {response.data['id'], self.token})
+
+        print('URL: ', url)
 
         response = self.client.get(url, format='json')
 
@@ -116,8 +118,7 @@ class OrderAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 1)
 
-        url = reverse(views.OrderDetail.name,  None, {
-                      response.data['id'], self.token})
+        url = reverse(views.OrderDetail.name,  None, { response.data['id'], self.token})
         data = {
             'user': 2,
             'paidAt': datetime.now(),
@@ -126,6 +127,23 @@ class OrderAPITest(APITestCase):
             'deliveredAt': datetime.now(),
         }
         response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_partial_update_order(self):
+        """Ensure we can update order"""
+
+        response = self.client.post(
+            self.url, self.orderItems, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Order.objects.count(), 1)
+
+        url = reverse(views.OrderDetail.name,  None, { response.data['id'], self.token})
+        data = {
+            'paidAt': datetime.now(),
+            'isPaid': True,
+        }
+        response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -146,7 +164,7 @@ class OrderAPITest(APITestCase):
 
         response = get_user_auth(token=self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['email'], 'hangaloandre1@gmail.com')
+        self.assertEqual(response.json()['email'], 'user@gmail.com')
 
     def test_login_with_no_credentials_exist(self):
         """Ensure we can login with credentias"""

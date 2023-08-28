@@ -10,6 +10,7 @@ class Order(BaseModel):
     paidAt = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     isDelivered = models.BooleanField(default=False)
     deliveredAt = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    paidInfo = models.JSONField(default=dict, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

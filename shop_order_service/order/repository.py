@@ -20,6 +20,19 @@ def get_product(product_id, domain=domain):
         return Response({'detail': 'No products'}, status=status.HTTP_404_NOT_FOUND)
 
 
+def login_user(email, password):
+    if email is None and password is None:
+            return Response({'detail': 'No credentials provided'}, status=status.HTTP_204_NO_CONTENT)
+    try:
+         response = requests.post('http://127.0.0.1:8002//user/dj-rest-auth/login/',data={'email':email, 'password':password})
+
+    except ConnectionError as c:
+            return Response({'detail': f'No connection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        if response.status_code == 200:
+            return response
+    return  Response({'detail': 'No user found with this credentials'}, status=status.HTTP_204_NO_CONTENT)
+
 
 def get_user_auth(token):
     if not token:

@@ -24,7 +24,7 @@ class OrderCreate(APIView):
             serializer = OrderItemSerializer(
                 data=request.data['orderItems'], many=True)
             if serializer.is_valid():
-                order = Order.objects.create(user=user.json())
+                order = Order.objects.create(user=user.json()['pk'])
                 [OrderItem.objects.create(
                     product_id=get_product(i['product_id']).json()['pk'],
                     product_name=get_product(i['product_id']).json()['name'],
@@ -45,13 +45,14 @@ class OrderDetail(APIView):
     Retrieve, update or delete a  order.
     """
     
+    
 
     def get_object(self, pk, token):
         try:
             user = get_user_auth(token=token)
             if user.status_code == 401:
                 return Response({'error': 'Unable to log in with provided credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-            return Order.objects.get(pk=pk)
+            return Order.objects.get(pk=pk, user=user.json()['pk'])
         except Order.DoesNotExist:
             raise Http404
 
@@ -64,6 +65,13 @@ class OrderDetail(APIView):
     def put(self, request, pk, token, format=None):
         order = self.get_object(pk=pk, token=token)
         serializer = OrderSerializer(order, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def patch(self, request, pk, token, format=None):
+        order = self.get_object(pk=pk, token=token)
+        serializer = OrderSerializer(order, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

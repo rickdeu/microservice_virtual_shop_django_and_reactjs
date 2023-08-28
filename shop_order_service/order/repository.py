@@ -20,22 +20,34 @@ def get_product(product_id, domain=domain):
         return Response({'detail': 'No products'}, status=status.HTTP_404_NOT_FOUND)
 
 
-def get_user_auth(data=[]):
-
-    if not data:
-        return Response({'detail': 'No credentials provided'}, status=status.HTTP_404_NOT_FOUND)
+def login_user(email, password):
+    if email is None and password is None:
+            return Response({'detail': 'No credentials provided'}, status=status.HTTP_204_NO_CONTENT)
     try:
-        login_url = 'http://127.0.0.1:8002/user/dj-rest-auth/login/'
-        response = requests.post(login_url, data=data)
-    except:
-        return Response({'detail': f'No connection with {login_url}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+         response = requests.post('http://127.0.0.1:8002//user/dj-rest-auth/login/',data={'email':email, 'password':password})
+
+    except ConnectionError as c:
+            return Response({'detail': f'No connection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         if response.status_code == 200:
-            token = response.json()['access']
-            paylod = jwt.decode(token, key='secret', algorithms=['HS256'], verify=False,  options={'verify_signature': False})
-            print('Token payload: ', paylod)
-            headers = {"Authorization": f"Bearer {token}"}
-            data_url = 'http://127.0.0.1:8002//user/dj-rest-auth/user/'
-            response = requests.get(data_url, headers=headers)
             return response
-        return  Response({'detail': 'No user found with this credentials'}, status=status.HTTP_404_NOT_FOUND)
+    return  Response({'detail': 'No user found with this credentials'}, status=status.HTTP_204_NO_CONTENT)
+
+
+def get_user_auth(token):
+    if not token:
+        return Response({'detail': 'No credentials provided'}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        #paylod = jwt.decode(token, key='secret', algorithms=['HS256'], verify=False,  options={'verify_signature': False})
+        headers = {"Authorization": f"Bearer {token}"}
+        data_url = 'http://127.0.0.1:8002//user/dj-rest-auth/user/'
+        response = requests.get(data_url, headers=headers)
+
+    except:
+        return Response({'detail': f'No connection with '}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        if response.status_code == 200:
+            return response
+    return  Response({'detail': 'No user found with this credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+

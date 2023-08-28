@@ -1,0 +1,15 @@
+version: '3'
+services:
+
+  product_service:
+    container_name: shop_payment_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: shop_payment_service
+    volumes:
+      - .:/shop_payment_service
+    command: 'python manage.py runserver 0.0.0.0:8003'
+    ports:
+      - "8003:8003"
+

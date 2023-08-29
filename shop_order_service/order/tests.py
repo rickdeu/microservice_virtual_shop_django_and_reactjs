@@ -26,13 +26,6 @@ class OrderAPITest(APITestCase):
             "orderItems": [
                 {
                     'product_id': 2,
-                    'product_name': 'goiba',
-                    'image': 'data.image',
-                    'price': 2,
-                    'qty': 100,
-                },
-                {
-                    'product_id': 2,
                     'product_name': 'pera',
                     'image': 'data.image',
                     'price': 2,

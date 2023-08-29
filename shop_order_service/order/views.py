@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
@@ -89,7 +87,7 @@ class UserOrders(APIView):
         try:
             user = get_user_auth(token=token)
         except:
-            return Response({'detail': f'No connection with '}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': f'No connection with '}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             if user.status_code == 200:
                 order = Order.objects.filter(user=user.json()['pk'])

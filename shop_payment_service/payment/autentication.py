@@ -3,10 +3,11 @@ import base64
 import requests
 from rest_framework.response import Response
 from rest_framework import status
+from shop_payment_service.domain import paypal_token_url, login_user_url
 
 
 def paypalToken(client_secret=settings.SECRET_KEY_PAYPAL, client_id=settings.CLIENT_ID):
-    url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+    url = f'{paypal_token_url}'
     data = {
         "client_id": client_id,
         "client_secret": client_secret,
@@ -25,9 +26,8 @@ def get_user_auth(token):
     try:
         #paylod = jwt.decode(token, key='secret', algorithms=['HS256'], verify=False,  options={'verify_signature': False})
         headers = {"Authorization": f"Bearer {token}"}
-        data_url = 'http://127.0.0.1:8002//user/dj-rest-auth/user/'
+        data_url = f'{login_user_url}/user/'
         response = requests.get(data_url, headers=headers)
-
     except:
         return Response({'detail': f'No connection with '}, status=status.HTTP_401_UNAUTHORIZED)
     else:
@@ -40,7 +40,7 @@ def login_user(email, password):
     if email is None and password is None:
             return Response({'detail': 'No credentials provided'}, status=status.HTTP_204_NO_CONTENT)
     try:
-         response = requests.post('http://127.0.0.1:8002//user/dj-rest-auth/login/',data={'email':email, 'password':password})
+         response = requests.post(f'{login_user_url}/login/',data={'email':email, 'password':password})
 
     except ConnectionError as c:
             return Response({'detail': f'No connection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -2,15 +2,12 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from payment import views
-
-from payment import repository
-from payment import paypalauth
+from payment.autentication import login_user
 
 
 class PaymentPayPalServiceAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        #self.url = reverse(views.PaymentOrderCreate.name)
         self.pk = 2
         self.data = {
             "intent": "CAPTURE",
@@ -53,7 +50,7 @@ class PaymentPayPalServiceAPITest(APITestCase):
         }
 
     def test_post_and_get_payment(self):
-        login = paypalauth.login_user(email='user@gmail.com', password='ndh*8987979878')
+        login = login_user(email='user@gmail.com', password='ndh*8987979878')
         print('Login payment: ', login.json()['access'])
 
         url = reverse(views.PaymentOrderCreate.name,  None, {self.pk, login.json()['access']})

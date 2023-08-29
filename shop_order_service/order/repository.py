@@ -1,16 +1,13 @@
 from rest_framework.response import Response
 from rest_framework import status
 import requests
-import jwt
-from datetime import datetime, timedelta
-
-domain = '127.0.0.1:8000'
+from shop_order_service.domain import user_auth_url, product_detail_url
 
 
-def get_product(product_id, domain=domain):
+def get_product(product_id):
 
     try:
-        product_url = f'http://{domain}/api/product-detail/{product_id}'
+        product_url = f'{product_detail_url}/{product_id}'
         response = requests.get(product_url)
     except ConnectionError as c:
         return Response({'detail': f'No connection with {product_url}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -24,7 +21,7 @@ def login_user(email, password):
     if email is None and password is None:
             return Response({'detail': 'No credentials provided'}, status=status.HTTP_204_NO_CONTENT)
     try:
-         response = requests.post('http://127.0.0.1:8002//user/dj-rest-auth/login/',data={'email':email, 'password':password})
+         response = requests.post(f'{user_auth_url}/login/',data={'email':email, 'password':password})
 
     except ConnectionError as c:
             return Response({'detail': f'No connection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -38,9 +35,8 @@ def get_user_auth(token):
     if not token:
         return Response({'detail': 'No credentials provided'}, status=status.HTTP_404_NOT_FOUND)
     try:
-        #paylod = jwt.decode(token, key='secret', algorithms=['HS256'], verify=False,  options={'verify_signature': False})
         headers = {"Authorization": f"Bearer {token}"}
-        data_url = 'http://127.0.0.1:8002//user/dj-rest-auth/user/'
+        data_url = f'{user_auth_url}/user/'
         response = requests.get(data_url, headers=headers)
 
     except:

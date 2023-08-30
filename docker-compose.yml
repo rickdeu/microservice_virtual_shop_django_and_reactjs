@@ -24,6 +24,30 @@ services:
     command: 'python shop_order_service/manage.py runserver 0.0.0.0:8001'
     ports:
       - "8001:8001"
+  
+  user_service:
+    container_name: shop_user_service
+    build:
+      context: .
+      dockerfile: shop_user_service/Dockerfile
+    image: shop_user_service
+    volumes:
+      - .:/shop_user_service
+    command: 'python shop_user_service/manage.py runserver 0.0.0.0:8002'
+    ports:
+      - "8002:8002"
+  
+  payment_service:
+    container_name: shop_payment_service
+    build:
+      context: .
+      dockerfile: shop_payment_service/Dockerfile
+    image: shop_payment_service
+    volumes:
+      - .:/shop_payment_service
+    command: 'python shop_payment_service/manage.py runserver 0.0.0.0:8003'
+    ports:
+      - "8003:8003"
 
   frontend:
     container_name: shop_frontend

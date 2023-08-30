@@ -1,0 +1,50 @@
+name: Test Microservices
+
+#on: [push]
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      product_service:
+        image: shop_product_service:latest
+        ports:
+          - 8000:8000
+        options: --name shop_product_service
+      order_service:
+        image: shop_order_service:latest
+        ports:
+          - 8001:8001
+        options: --name shop_order_service
+      user_service:
+        image: shop_user_service:latest
+        ports:
+          - 8002:8002
+        options: --name shop_user_service
+      payment_service:
+        image: shop_payment_service:latest
+        ports:
+          - 8003:8003
+        options: --name shop_payment_service
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Django tests
+        run: |
+          python manage.py test
